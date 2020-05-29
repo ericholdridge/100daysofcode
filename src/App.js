@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import React, { Component } from "react";
 
-import Person from "../src/Person/Person";
+import Person from "../src/components/Person/Person";
 
 class App extends Component {
   // Original state
@@ -15,10 +15,10 @@ class App extends Component {
   }
 
   // Change name on button click
-  switchNameHandler = () => {
+  switchNameHandler = (newName) => {
     this.setState({
       persons: [
-        {name: "Jimmy", age: 23},
+        {name: newName, age: 23},
         {name: "Kyle", age: 25},
         {name: "Mike", age: 29},
       ]
@@ -29,7 +29,7 @@ class App extends Component {
     return (
       <div className="App" css={styles}>
         <div className="container">
-          <button onClick={this.switchNameHandler}>Switch Name</button>
+          <button onClick={this.switchNameHandler.bind(this, "Eric Holdridge")}>Switch Name</button>
           <Person
           click={this.switchNameHandler}
           name={this.state.persons[0].name} 
