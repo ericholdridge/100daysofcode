@@ -8,22 +8,38 @@ class App extends Component {
   // Original state
   state = {
     persons: [
-      { name: "Eric", age: 23 },
-      { name: "Kyle", age: 25 },
-      { name: "Mike", age: 29 },
+      { id: "1", name: "Eric", age: 23 },
+      { id: "2", name: "Kyle", age: 25 },
+      { id: "3", name: "Mike", age: 29 },
     ],
     showPersons: false,
+    animals: ["Dog", "Cat", "Gnat"],
   };
 
   // Delete a person component if use clicks on the persons component paragraph
-  deletePersonsHandler = (personIndex) => {
-    const persons = this.state.persons
-    persons.splice(personIndex, 1)
-    this.setState({persons: persons})
-  }
+  deletePersonsHandler = (index) => {
+    // Copy the persons array using es6 spread operator
+    const persons = [...this.state.persons];
+    persons.splice(index, 1);
+    this.setState({ persons: persons });
+  };
 
   // Change the name based on users input
-  nameChangeHandler = (event) => {
+  nameChangeHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id
+    })
+
+    const person = {...this.state.persons[personIndex]}
+
+    person.name = event.target.value
+    const persons = [...this.state.persons]
+    persons[personIndex] = person
+
+    this.setState({
+      persons: persons
+    })
+
     this.setState({
       persons: [
         { name: "Eric Holdridge", age: 23 },
@@ -35,7 +51,7 @@ class App extends Component {
 
   // Show and hide the person component if the button is clicked
   showPersonsHandler = () => {
-    const doesShow = this.state.showPersons
+    const doesShow = this.state.showPersons;
     this.setState({
       showPersons: !doesShow,
     });
@@ -47,7 +63,15 @@ class App extends Component {
       persons = (
         <div>
           {this.state.persons.map((person, index) => {
-            return <Person key={index} name={person.name} age={person.age} click={() => this.deletePersonsHandler(index)} />
+            return (
+              <Person
+                key={person.id}
+                name={person.name}
+                age={person.age}
+                changed={(event) => this.nameChangeHandler(event, person.id)}
+                click={() => this.deletePersonsHandler(index)}
+              />
+            );
           })}
         </div>
       );
